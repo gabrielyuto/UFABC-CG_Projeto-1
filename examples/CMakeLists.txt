@@ -1,1 +1,1 @@
-add_subdirectory(atividade)
+add_subdirectory(atividade-1)
