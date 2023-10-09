@@ -5,7 +5,9 @@ int main(int argc, char **argv) {
     abcg::Application app(argc, argv);
 
     Window window;
-    window.setWindowSettings({.title = "First App"});
+    window.setOpenGLSettings({.samples = 2, .vSync = true, .doubleBuffering = false});
+    window.setWindowSettings(
+        {.width = 600, .height = 600, .title = "Colorindo"});
 
     app.run(window);
   } catch (std::exception const &exception) {
