@@ -49,7 +49,7 @@ void Window::onPaint() {
   abcg::glUseProgram(m_program);
   abcg::glBindVertexArray(m_VAO);
 
-  abcg::glDrawArrays(type_mode, 0, 3);
+  abcg::glDrawArrays(GL_POINT, 0, 3);
 
   abcg::glBindVertexArray(0);
   abcg::glUseProgram(0);
