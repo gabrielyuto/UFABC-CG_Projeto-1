@@ -62,6 +62,7 @@ void Window::onPaintUI() {
     ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x - widgetSize.x - 5,
                                    m_viewportSize.y - widgetSize.y - 5));
     ImGui::SetNextWindowSize(widgetSize);
+
     auto windowFlags{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar};
     ImGui::Begin(" ", nullptr, windowFlags);
 
@@ -81,41 +82,39 @@ void Window::onPaintUI() {
     if (ImGui::BeginCombo("Primitivas", comboItems.at(currentIndex))) {
       for (auto index{0U}; index < comboItems.size(); ++index) {
         bool const isSelected{currentIndex == index};
-        if (ImGui::Selectable(comboItems.at(index), isSelected))
+        if (ImGui::Selectable(comboItems.at(index), isSelected)) {
           currentIndex = index;
-        if (currentIndex == 0) {
+        }
+
+        switch (currentIndex) {
+        case 0:
           type_mode = GL_POINTS;
-        }
-
-        if (currentIndex == 1) {
+          break;
+        case 1:
           type_mode = GL_LINES;
-        }
-
-        if (currentIndex == 2) {
+          break;
+        case 2:
           type_mode = GL_LINE_STRIP;
-        }
-
-        if (currentIndex == 3) {
+          break;
+        case 3:
           type_mode = GL_LINE_LOOP;
-        }
-
-        if (currentIndex == 4) {
+          break;
+        case 4:
           type_mode = GL_TRIANGLES;
-        }
-
-        if (currentIndex == 5) {
+          break;
+        case 5:
           type_mode = GL_TRIANGLE_STRIP;
-        }
-
-        if (currentIndex == 6) {
+          break;
+        case 6:
           type_mode = GL_TRIANGLE_FAN;
+          break;
         }
 
-        if (isSelected)
+        if (isSelected) {
           ImGui::SetItemDefaultFocus();
+          abcg::glClear(GL_COLOR_BUFFER_BIT);
+        }
       }
-      abcg::glClearColor(0, 0, 0, 1);
-      abcg::glClear(GL_COLOR_BUFFER_BIT);
 
       ImGui::EndCombo();
     }
