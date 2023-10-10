@@ -37,7 +37,6 @@ void Window::onCreate() {
 }
 
 void Window::onPaint() {
-  // Check whether to render the next triangle
   if (m_timer.elapsed() < 1.0 / 20)
     return;
   m_timer.restart();
@@ -49,7 +48,7 @@ void Window::onPaint() {
   abcg::glUseProgram(m_program);
   abcg::glBindVertexArray(m_VAO);
 
-  abcg::glDrawArrays(GL_POINT, 0, 3);
+  abcg::glDrawArrays(type_mode, 0, 3);
 
   abcg::glBindVertexArray(0);
   abcg::glUseProgram(0);
@@ -59,14 +58,13 @@ void Window::onPaintUI() {
   abcg::OpenGLWindow::onPaintUI();
 
   {
-    auto const widgetSize{ImVec2(250, 90)};
+    auto const widgetSize{ImVec2(260, 120)};
     ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x - widgetSize.x - 5,
                                    m_viewportSize.y - widgetSize.y - 5));
     ImGui::SetNextWindowSize(widgetSize);
     auto windowFlags{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar};
     ImGui::Begin(" ", nullptr, windowFlags);
 
-    // Edit vertex colors
     auto colorEditFlags{ImGuiColorEditFlags_NoTooltip |
                         ImGuiColorEditFlags_NoPicker};
     ImGui::PushItemWidth(215);
@@ -75,25 +73,52 @@ void Window::onPaintUI() {
     ImGui::ColorEdit3("v2", &m_colors.at(2).x, colorEditFlags);
     ImGui::PopItemWidth();
 
-    // static std::size_t currentIndex{};
-    // std::vector comboItems{
-    //     "GL_POINTS",    "GL_LINES",          "GL_LINE_STRIP", "GL_LINE_LOOP",
-    //     "GL_TRIANGLES", "GL_TRIANGLE_STRIP", "GL_TRIANGLE_FAN"};
+    static std::size_t currentIndex{};
+    std::vector comboItems{
+        "GL_POINTS",    "GL_LINES",          "GL_LINE_STRIP",  "GL_LINE_LOOP",
+        "GL_TRIANGLES", "GL_TRIANGLE_STRIP", "GL_TRIANGLE_FAN"};
 
-    // if (ImGui::BeginCombo("Primitivas", comboItems.at(currentIndex))) {
-    //   for (auto index{0U}; index < comboItems.size(); ++index) {
-    //     bool const isSelected{currentIndex == index};
-    //     if (ImGui::Selectable(comboItems.at(index), isSelected))
-    //       currentIndex = index;
-    //         type_mode = GL_POINT;
+    if (ImGui::BeginCombo("Primitivas", comboItems.at(currentIndex))) {
+      for (auto index{0U}; index < comboItems.size(); ++index) {
+        bool const isSelected{currentIndex == index};
+        if (ImGui::Selectable(comboItems.at(index), isSelected))
+          currentIndex = index;
+        if (currentIndex == 0) {
+          type_mode = GL_POINTS;
+        }
 
-    //     // Set the initial focus when opening the combo (scrolling + keyboard
-    //     // navigation focus)
-    //     if (isSelected)
-    //       ImGui::SetItemDefaultFocus();
-    //   }
-    //   ImGui::EndCombo();
-    // }
+        if (currentIndex == 1) {
+          type_mode = GL_LINES;
+        }
+
+        if (currentIndex == 2) {
+          type_mode = GL_LINE_STRIP;
+        }
+
+        if (currentIndex == 3) {
+          type_mode = GL_LINE_LOOP;
+        }
+
+        if (currentIndex == 4) {
+          type_mode = GL_TRIANGLES;
+        }
+
+        if (currentIndex == 5) {
+          type_mode = GL_TRIANGLE_STRIP;
+        }
+
+        if (currentIndex == 6) {
+          type_mode = GL_TRIANGLE_FAN;
+        }
+
+        if (isSelected)
+          ImGui::SetItemDefaultFocus();
+      }
+      abcg::glClearColor(0, 0, 0, 1);
+      abcg::glClear(GL_COLOR_BUFFER_BIT);
+
+      ImGui::EndCombo();
+    }
 
     ImGui::End();
   }
@@ -117,36 +142,30 @@ void Window::setupModel() {
   abcg::glDeleteBuffers(1, &m_VBOColors);
   abcg::glDeleteVertexArrays(1, &m_VAO);
 
-  // Create array of random vertex positions
   std::uniform_real_distribution rd(-1.5f, 1.5f);
   std::array<glm::vec2, 3> const positions{
       {{rd(m_randomEngine), rd(m_randomEngine)},
        {rd(m_randomEngine), rd(m_randomEngine)},
        {rd(m_randomEngine), rd(m_randomEngine)}}};
 
-  // Generate VBO of positions
   abcg::glGenBuffers(1, &m_VBOPositions);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBOPositions);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Generate VBO of colors
   abcg::glGenBuffers(1, &m_VBOColors);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_VBOColors);
   abcg::glBufferData(GL_ARRAY_BUFFER, sizeof(m_colors), m_colors.data(),
                      GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // Get location of attributes in the program
   auto const positionAttribute{
       abcg::glGetAttribLocation(m_program, "inPosition")};
   auto const colorAttribute{abcg::glGetAttribLocation(m_program, "inColor")};
 
-  // Create VAO
   abcg::glGenVertexArrays(1, &m_VAO);
 
-  // Bind vertex attributes to current VAO
   abcg::glBindVertexArray(m_VAO);
 
   abcg::glEnableVertexAttribArray(positionAttribute);
@@ -161,6 +180,5 @@ void Window::setupModel() {
                               nullptr);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  // End of binding to current VAO
   abcg::glBindVertexArray(0);
 }

@@ -29,7 +29,7 @@ private:
                                      {1.00f, 0.69f, 0.30f, 1}}};
   abcg::Timer m_timer;
 
-//   GLenum type_mode{GL_TRIANGLES};
+  GLenum type_mode{GL_TRIANGLES};
 
   void setupModel();
 };
