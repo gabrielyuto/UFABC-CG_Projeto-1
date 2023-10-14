@@ -37,7 +37,7 @@ void Window::onCreate() {
 }
 
 void Window::onPaint() {
-  if (m_timer.elapsed() < 1.0 / 20)
+  if (m_timer.elapsed() < 1.0 / 10)
     return;
   m_timer.restart();
 
@@ -84,6 +84,10 @@ void Window::onPaintUI() {
         bool const isSelected{currentIndex == index};
         if (ImGui::Selectable(comboItems.at(index), isSelected)) {
           currentIndex = index;
+
+          abcg::glClear(GL_COLOR_BUFFER_BIT);
+
+          fmt::print("Box Selected.\n");
         }
 
         switch (currentIndex) {
@@ -112,7 +116,6 @@ void Window::onPaintUI() {
 
         if (isSelected) {
           ImGui::SetItemDefaultFocus();
-          abcg::glClear(GL_COLOR_BUFFER_BIT);
         }
       }
 
