@@ -75,9 +75,8 @@ void Window::onPaintUI() {
     ImGui::PopItemWidth();
 
     static std::size_t currentIndex{};
-    std::vector comboItems{
-        "GL_POINTS",    "GL_LINES",          "GL_LINE_STRIP",  "GL_LINE_LOOP",
-        "GL_TRIANGLES", "GL_TRIANGLE_STRIP", "GL_TRIANGLE_FAN"};
+    std::vector comboItems{"GL_POINTS", "GL_LINES", "GL_LINE_STRIP",
+                           "GL_LINE_LOOP", "GL_TRIANGLES"};
 
     if (ImGui::BeginCombo("Primitivas", comboItems.at(currentIndex))) {
       for (auto index{0U}; index < comboItems.size(); ++index) {
