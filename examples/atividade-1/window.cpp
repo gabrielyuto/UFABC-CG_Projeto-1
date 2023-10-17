@@ -37,7 +37,7 @@ void Window::onCreate() {
 }
 
 void Window::onPaint() {
-  if (m_timer.elapsed() < 1.0 / 10)
+  if (m_timer.elapsed() < 1.0)
     return;
   m_timer.restart();
 
@@ -48,7 +48,7 @@ void Window::onPaint() {
   abcg::glUseProgram(m_program);
   abcg::glBindVertexArray(m_VAO);
 
-  abcg::glDrawArrays(type_mode, 0, 3);
+  abcg::glDrawArrays(type_mode, 0, glDraw_count);
 
   abcg::glBindVertexArray(0);
   abcg::glUseProgram(0);
@@ -58,13 +58,17 @@ void Window::onPaintUI() {
   abcg::OpenGLWindow::onPaintUI();
 
   {
-    auto const widgetSize{ImVec2(260, 120)};
+    auto const widgetSize{ImVec2(270, 200)};
     ImGui::SetNextWindowPos(ImVec2(m_viewportSize.x - widgetSize.x - 5,
                                    m_viewportSize.y - widgetSize.y - 5));
     ImGui::SetNextWindowSize(widgetSize);
 
     auto windowFlags{ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar};
     ImGui::Begin(" ", nullptr, windowFlags);
+
+    if (ImGui::Button("Clear window", ImVec2(260, 30))) {
+      abcg::glClear(GL_COLOR_BUFFER_BIT);
+    }
 
     auto colorEditFlags{ImGuiColorEditFlags_NoTooltip |
                         ImGuiColorEditFlags_NoPicker};
@@ -119,6 +123,10 @@ void Window::onPaintUI() {
       }
 
       ImGui::EndCombo();
+    }
+
+    if (ImGui::SliderInt("Draw count", &glDraw_count, 3, 20)) {
+      abcg::glClear(GL_COLOR_BUFFER_BIT);
     }
 
     ImGui::End();

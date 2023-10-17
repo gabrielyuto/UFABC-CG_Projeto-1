@@ -30,6 +30,7 @@ private:
   abcg::Timer m_timer;
 
   GLenum type_mode{GL_TRIANGLES};
+  int glDraw_count{3};
 
   void setupModel();
 };
