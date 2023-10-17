@@ -37,7 +37,7 @@ void Window::onCreate() {
 }
 
 void Window::onPaint() {
-  if (m_timer.elapsed() < 1.0)
+  if (m_timer.elapsed() < 1.0 / delay)
     return;
   m_timer.restart();
 
@@ -126,6 +126,10 @@ void Window::onPaintUI() {
     }
 
     if (ImGui::SliderInt("Draw count", &glDraw_count, 3, 20)) {
+      abcg::glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    if (ImGui::SliderFloat("Delay", &delay, 1.0f, 100.0f)) {
       abcg::glClear(GL_COLOR_BUFFER_BIT);
     }
 

@@ -31,6 +31,7 @@ private:
 
   GLenum type_mode{GL_TRIANGLES};
   int glDraw_count{3};
+  float delay{1};
 
   void setupModel();
 };
