@@ -4,7 +4,7 @@
 
 - Nome dos integrantes: Fernando Schroder / Gabriel Yuto Munakata
 - RAs: 11201921885/ 11201721879
-- Link WebAssembly: https://gabrielyuto.github.io/computacao-grafica-atividade-1/atividade-1/index.html
+- Link WebAssembly: https://gabrielyuto.github.io/computacao-grafica-atv-1/atividade-1/index.html
 
 ## Descrição da aplicação:
 
